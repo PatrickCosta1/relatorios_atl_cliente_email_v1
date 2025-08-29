@@ -9,14 +9,13 @@ app.use(cors());
 
 app.post('/api/email', upload.array('fotos'), async (req, res) => {
   try {
-    const { name, email, contacto, morada, distancia, preco_deslocacao, mao_obra, total, detalhes } = req.body;
+  const { name, email, contacto, morada, distancia, preco_deslocacao, total, detalhes } = req.body;
     // Corrige valores undefined, string 'undefined' ou vazia
     function safeVal(val) {
       return (val && val !== 'undefined') ? val : '-';
     }
-    const deslocacaoVal = safeVal(preco_deslocacao);
-    const maoObraVal = safeVal(mao_obra);
-    const totalVal = safeVal(total);
+  const deslocacaoVal = safeVal(preco_deslocacao);
+  const totalVal = safeVal(total);
 
     // CONFIGURE AQUI SEU E-MAIL E SENHA DE APLICATIVO
     const transporter = nodemailer.createTransport({
@@ -37,7 +36,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
     }
 
 
-    // E-mail para a empresa (super estilizado)
+    // E-mail para a empresa (valor deslocação e total)
     await transporter.sendMail({
       from: 'Atlanthia Piscinas <pat16spam@gmail.com>',
       to: 'pat16spam@gmail.com',
@@ -68,7 +67,6 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
                       <tr><td style="padding:8px 0;font-weight:600;">Morada:</td><td style="padding:8px 0;">${morada}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Distância até à sede:</td><td style="padding:8px 0;">${distancia} km</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Valor deslocação:</td><td style="padding:8px 0;">${deslocacaoVal}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Mão de obra (fixo):</td><td style="padding:8px 0;">${maoObraVal}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:700;">Total estimado:</td><td style="padding:8px 0;font-weight:700;color:#2563eb;">${totalVal}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Descrição do problema:</td><td style="padding:8px 0;">${detalhes}</td></tr>
                     </table>
@@ -97,7 +95,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
       attachments
     });
 
-    // E-mail de confirmação para o cliente (super estilizado)
+    // E-mail de confirmação para o cliente (mais estilizado e com aviso)
     await transporter.sendMail({
       from: 'Atlanthia Piscinas <pat16spam@gmail.com>',
       to: email,
@@ -109,34 +107,37 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:40px 0;">
           <tr>
             <td align="center">
-              <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.09);padding:0 0 30px 0;">
+              <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(37,99,235,0.13);padding:0 0 36px 0;">
                 <tr>
-                  <td style="background:#2563eb;padding:30px 0 20px 0;border-radius:12px 12px 0 0;text-align:center;">
-                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:220px;height:auto;margin-bottom:10px;">
-                    <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.5rem;margin:10px 0 0 0;letter-spacing:1px;">Confirmação do Pedido</h1>
+                  <td style="background:linear-gradient(90deg,#2563eb 60%,#003366 100%);padding:36px 0 24px 0;border-radius:16px 16px 0 0;text-align:center;">
+                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:180px;height:auto;margin-bottom:12px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.10));">
+                    <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.7rem;margin:12px 0 0 0;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.10);">Pedido Recebido!</h1>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:30px 40px 10px 40px;">
-                    <p style="font-family:Inter,Arial,sans-serif;font-size:1.1rem;color:#222;margin:0 0 18px 0;">
+                  <td style="padding:36px 44px 10px 44px;">
+                    <p style="font-family:Inter,Arial,sans-serif;font-size:1.13rem;color:#222;margin:0 0 18px 0;line-height:1.6;">
                       Olá <b>${name}</b>,<br>
-                      Obrigado por contactar a <b>Atlanthia Piscinas</b>! Confirmamos que recebemos o seu pedido e entraremos em contacto o mais breve possível.
+                      Agradecemos o seu contacto! Recebemos o seu pedido de manutenção e entraremos em contacto o mais breve possível.<br><br>
+                      <span style="display:inline-block;background:#fff3cd;color:#856404;padding:10px 16px;border-radius:8px;font-size:1.01rem;border:1px solid #ffeeba;margin-bottom:18px;">
+                        <b>Atenção:</b> O valor apresentado no formulário é apenas uma estimativa de deslocação. O preço final do serviço poderá variar após avaliação técnica e outros fatores. Não considere este valor como orçamento final.
+                      </span>
                     </p>
-                    <table width="100%" cellpadding="0" cellspacing="0" style="font-family:Inter,Arial,sans-serif;font-size:1rem;color:#222;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="font-family:Inter,Arial,sans-serif;font-size:1.05rem;color:#222;margin-bottom:18px;">
                       <tr><td style="padding:8px 0;font-weight:600;width:180px;">Morada:</td><td style="padding:8px 0;">${morada}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Descrição do problema:</td><td style="padding:8px 0;">${detalhes}</td></tr>
                     </table>
                     <div style="margin:24px 0 0 0;">
                       <span style="display:inline-block;background:#e0e7ff;color:#2563eb;padding:8px 16px;border-radius:6px;font-size:.98rem;">
-                        Se enviou fotos, elas foram recebidas.
+                        Se enviou fotos, elas foram recebidas com sucesso.
                       </span>
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:30px 40px 0 40px;">
-                    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
-                    <p style="font-family:Inter,Arial,sans-serif;font-size:.98rem;color:#64748b;text-align:right;margin:0;">
+                  <td style="padding:36px 44px 0 44px;">
+                    <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0;">
+                    <p style="font-family:Inter,Arial,sans-serif;font-size:1.01rem;color:#64748b;text-align:right;margin:0;">
                       Recebido automaticamente via formulário do site <strong>Atlanthia Piscinas</strong>.<br>
                       <span style="color:#2563eb;">Muito obrigado pela sua confiança!</span>
                     </p>
