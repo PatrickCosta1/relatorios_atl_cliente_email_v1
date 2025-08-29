@@ -15,12 +15,12 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'pat16spam@gmail.com', // Altere para seu e-mail
-        pass: 'bwnxguwwyvhuiced' // Altere para sua senha de app
+        user: 'patrickcosta1605@gmail.com', // Altere para seu e-mail
+        pass: 'fnsy oiwv nqja bzzy' // Altere para sua senha de app
       }
     });
 
-    
+
     let attachments = [];
     if (req.files && req.files.length > 0) {
       attachments = req.files.map(file => ({
