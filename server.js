@@ -9,11 +9,14 @@ app.use(cors());
 
 app.post('/api/email', upload.array('fotos'), async (req, res) => {
   try {
-  const { name, email, contacto, morada, distancia, preco_deslocacao, mao_obra, total, detalhes } = req.body;
-  // Corrige valores undefined para string vazia
-  const deslocacaoVal = preco_deslocacao || '-';
-  const maoObraVal = mao_obra || '-';
-  const totalVal = total || '-';
+    const { name, email, contacto, morada, distancia, preco_deslocacao, mao_obra, total, detalhes } = req.body;
+    // Corrige valores undefined, string 'undefined' ou vazia
+    function safeVal(val) {
+      return (val && val !== 'undefined') ? val : '-';
+    }
+    const deslocacaoVal = safeVal(preco_deslocacao);
+    const maoObraVal = safeVal(mao_obra);
+    const totalVal = safeVal(total);
 
     // CONFIGURE AQUI SEU E-MAIL E SENHA DE APLICATIVO
     const transporter = nodemailer.createTransport({
@@ -49,7 +52,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
               <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.09);padding:0 0 30px 0;">
                 <tr>
                   <td style="background:#003366;padding:30px 0 20px 0;border-radius:12px 12px 0 0;text-align:center;">
-                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
+                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:220px;height:auto;margin-bottom:10px;">
                     <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.7rem;margin:10px 0 0 0;letter-spacing:1px;">Novo Pedido de Manutenção</h1>
                   </td>
                 </tr>
@@ -109,7 +112,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
               <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.09);padding:0 0 30px 0;">
                 <tr>
                   <td style="background:#2563eb;padding:30px 0 20px 0;border-radius:12px 12px 0 0;text-align:center;">
-                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
+                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:220px;height:auto;margin-bottom:10px;">
                     <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.5rem;margin:10px 0 0 0;letter-spacing:1px;">Confirmação do Pedido</h1>
                   </td>
                 </tr>
