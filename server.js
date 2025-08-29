@@ -9,7 +9,11 @@ app.use(cors());
 
 app.post('/api/email', upload.array('fotos'), async (req, res) => {
   try {
-    const { name, email, contacto, morada, distancia, preco_deslocacao, mao_obra, total, detalhes, links_fotos } = req.body;
+  const { name, email, contacto, morada, distancia, preco_deslocacao, mao_obra, total, detalhes } = req.body;
+  // Corrige valores undefined para string vazia
+  const deslocacaoVal = preco_deslocacao || '-';
+  const maoObraVal = mao_obra || '-';
+  const totalVal = total || '-';
 
     // CONFIGURE AQUI SEU E-MAIL E SENHA DE APLICATIVO
     const transporter = nodemailer.createTransport({
@@ -45,7 +49,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
               <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.09);padding:0 0 30px 0;">
                 <tr>
                   <td style="background:#003366;padding:30px 0 20px 0;border-radius:12px 12px 0 0;text-align:center;">
-                    <img src="https://atlanthiapiscinas.pt/wp-content/uploads/2021/03/logo-atlanthia-piscinas-branco.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
+                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
                     <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.7rem;margin:10px 0 0 0;letter-spacing:1px;">Novo Pedido de Manutenção</h1>
                   </td>
                 </tr>
@@ -60,10 +64,9 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
                       <tr><td style="padding:8px 0;font-weight:600;">Contacto:</td><td style="padding:8px 0;">${contacto}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Morada:</td><td style="padding:8px 0;">${morada}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Distância até à sede:</td><td style="padding:8px 0;">${distancia} km</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Valor deslocação:</td><td style="padding:8px 0;">${preco_deslocacao}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Mão de obra (fixo):</td><td style="padding:8px 0;">${mao_obra}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Total estimado:</td><td style="padding:8px 0;font-weight:700;color:#2563eb;">${total}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Links para fotos:</td><td style="padding:8px 0;">${links_fotos || 'Nenhum'}</td></tr>
+                      <tr><td style="padding:8px 0;font-weight:600;">Valor deslocação:</td><td style="padding:8px 0;">${deslocacaoVal}</td></tr>
+                      <tr><td style="padding:8px 0;font-weight:600;">Mão de obra (fixo):</td><td style="padding:8px 0;">${maoObraVal}</td></tr>
+                      <tr><td style="padding:8px 0;font-weight:700;">Total estimado:</td><td style="padding:8px 0;font-weight:700;color:#2563eb;">${totalVal}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Descrição do problema:</td><td style="padding:8px 0;">${detalhes}</td></tr>
                     </table>
                     <div style="margin:24px 0 0 0;">
@@ -106,7 +109,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
               <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.09);padding:0 0 30px 0;">
                 <tr>
                   <td style="background:#2563eb;padding:30px 0 20px 0;border-radius:12px 12px 0 0;text-align:center;">
-                    <img src="https://atlanthiapiscinas.pt/wp-content/uploads/2021/03/logo-atlanthia-piscinas-branco.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
+                    <img src="https://atlanthia.com/wp-content/uploads/2023/04/Logotipo-Website.png" alt="Atlanthia Piscinas" style="width:140px;height:auto;margin-bottom:10px;">
                     <h1 style="color:#fff;font-family:Inter,Arial,sans-serif;font-size:1.5rem;margin:10px 0 0 0;letter-spacing:1px;">Confirmação do Pedido</h1>
                   </td>
                 </tr>
