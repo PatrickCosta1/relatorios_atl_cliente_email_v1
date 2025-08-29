@@ -16,10 +16,11 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'pat16spam@gmail.com', // Altere para seu e-mail
-        pass: 'ktta naez cfij atza' // Altere para sua senha de app
+        pass: 'bwnxguwwyvhuiced' // Altere para sua senha de app
       }
     });
 
+    
     let attachments = [];
     if (req.files && req.files.length > 0) {
       attachments = req.files.map(file => ({
