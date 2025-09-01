@@ -116,9 +116,6 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
                     <p style="font-family:Inter,Arial,sans-serif;font-size:1.13rem;color:#222;margin:0 0 18px 0;line-height:1.6;">
                       Olá <b>${name}</b>,<br>
                       Agradecemos o seu contacto! Recebemos o seu pedido de manutenção e entraremos em contacto o mais breve possível.<br><br>
-                      <span style="display:inline-block;background:#fff3cd;color:#856404;padding:10px 16px;border-radius:8px;font-size:1.01rem;border:1px solid #ffeeba;margin-bottom:18px;">
-                        <b>Atenção:</b> O valor apresentado no formulário é apenas uma estimativa de deslocação. O preço final do serviço poderá variar após avaliação técnica e outros fatores. Não considere este valor como orçamento final.
-                      </span>
                     </p>
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-family:Inter,Arial,sans-serif;font-size:1.05rem;color:#222;margin-bottom:18px;">
                       <tr><td style="padding:8px 0;font-weight:600;width:180px;">Morada:</td><td style="padding:8px 0;">${morada}</td></tr>
