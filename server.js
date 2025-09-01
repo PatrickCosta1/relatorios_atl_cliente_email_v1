@@ -9,13 +9,12 @@ app.use(cors());
 
 app.post('/api/email', upload.array('fotos'), async (req, res) => {
   try {
-  const { name, email, contacto, morada, distancia, preco_deslocacao, total, detalhes } = req.body;
+    const { name, email, contacto, morada, distancia, detalhes } = req.body;
     // Corrige valores undefined, string 'undefined' ou vazia
     function safeVal(val) {
       return (val && val !== 'undefined') ? val : '-';
     }
-  const deslocacaoVal = safeVal(preco_deslocacao);
-  const totalVal = safeVal(total);
+    const distanciaVal = safeVal(distancia);
 
     // CONFIGURE AQUI SEU E-MAIL E SENHA DE APLICATIVO
     const transporter = nodemailer.createTransport({
@@ -65,9 +64,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
                       <tr><td style="padding:8px 0;font-weight:600;">E-mail:</td><td style="padding:8px 0;">${email}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Contacto:</td><td style="padding:8px 0;">${contacto}</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;">Morada:</td><td style="padding:8px 0;">${morada}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Distância até à sede:</td><td style="padding:8px 0;">${distancia} km</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:600;">Valor deslocação:</td><td style="padding:8px 0;">${deslocacaoVal}</td></tr>
-                      <tr><td style="padding:8px 0;font-weight:700;">Total estimado:</td><td style="padding:8px 0;font-weight:700;color:#2563eb;">${totalVal}</td></tr>
+                      <tr><td style="padding:8px 0;font-weight:600;">Distância até à sede:</td><td style="padding:8px 0;">${distanciaVal} km</td></tr>
                       <tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Descrição do problema:</td><td style="padding:8px 0;">${detalhes}</td></tr>
                     </table>
                     <div style="margin:24px 0 0 0;">
