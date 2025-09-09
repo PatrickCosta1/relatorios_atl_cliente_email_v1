@@ -171,7 +171,6 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
       </html>
       `
     });
-
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
