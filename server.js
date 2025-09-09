@@ -20,8 +20,8 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'patrickcosta1605@gmail.com', // Altere para seu e-mail
-        pass: 'fnsy oiwv nqja bzzy' // Altere para sua senha de app
+        user: 'manutencao@atlanthia.com', // Altere para seu e-mail
+        pass: 'Dubaipool26' // Altere para sua senha de app
       }
     });
 
@@ -37,8 +37,8 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
 
     // E-mail para a empresa (valor deslocação e total)
     await transporter.sendMail({
-      from: 'Atlanthia Piscinas <pat16spam@gmail.com>',
-      to: 'pat16spam@gmail.com',
+      from: 'Atlanthia Piscinas <manutencao@atlanthia.com>',
+      to: 'manutencao@atlanthia.com',
       subject: 'Novo Pedido de Manutenção de Piscina',
       html: `
       <!DOCTYPE html>
@@ -94,7 +94,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
 
     // E-mail de confirmação para o cliente (mais estilizado e com aviso)
     await transporter.sendMail({
-      from: 'Atlanthia Piscinas <pat16spam@gmail.com>',
+      from: 'Atlanthia Piscinas <manutencao@atlanthia.com>',
       to: email,
       subject: 'Confirmação do Pedido de Manutenção',
       html: `
