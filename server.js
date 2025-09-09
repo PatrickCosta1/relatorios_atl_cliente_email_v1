@@ -2,10 +2,15 @@ import express from 'express';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/email', upload.array('fotos'), async (req, res) => {
   try {
@@ -16,15 +21,37 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
     }
     const distanciaVal = safeVal(distancia);
 
-    // CONFIGURE AQUI SEU E-MAIL E SENHA DE APLICATIVO
+    // CONFIGURE CREDENCIAIS VIA VARIÁVEIS DE AMBIENTE (EMAIL_USER e EMAIL_PASS)
+    const EMAIL_USER = process.env.EMAIL_USER || 'manutencao@atlanthia.com';
+    const EMAIL_PASS = process.env.EMAIL_PASS || 'Dubaipool26';
+    if (!EMAIL_PASS) {
+      console.error('EMAIL_PASS não definido no ambiente.');
+      return res.status(500).json({ error: 'EMAIL_PASS não definido no ambiente. Configure a senha do e‑mail em EMAIL_PASS.' });
+    }
+
+    // transporter para Outlook / Office365 (SMTP)
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.office365.com',
+      port: 587,
+      secure: false, // STARTTLS
       auth: {
-        user: 'manutencao@atlanthia.com', // Altere para seu e-mail
-        pass: 'Dubaipool26' // Altere para sua senha de app
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
+      },
+      tls: {
+        ciphers: 'TLSv1.2',
+        rejectUnauthorized: false
       }
     });
 
+    // verificar transporter (falha aqui indica problema de autenticação/ligação)
+    try {
+      await transporter.verify();
+      console.log('Transporter verificado com sucesso.');
+    } catch (verifyErr) {
+      console.error('Falha ao verificar transporter:', verifyErr);
+      return res.status(500).json({ error: 'Falha na autenticação SMTP. Verifique EMAIL_USER/EMAIL_PASS e configurações do provedor.', detail: verifyErr.message });
+    }
 
     let attachments = [];
     if (req.files && req.files.length > 0) {
@@ -34,11 +61,10 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
       }));
     }
 
-
-    // E-mail para a empresa (valor deslocação e total)
+    // E-mail para a empresa
     await transporter.sendMail({
-      from: 'Atlanthia Piscinas <manutencao@atlanthia.com>',
-      to: 'manutencao@atlanthia.com',
+      from: `Atlanthia Piscinas <${EMAIL_USER}>`,
+      to: EMAIL_USER,
       subject: 'Novo Pedido de Manutenção de Piscina',
       html: `
       <!DOCTYPE html>
@@ -94,7 +120,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
 
     // E-mail de confirmação para o cliente (mais estilizado e com aviso)
     await transporter.sendMail({
-      from: 'Atlanthia Piscinas <manutencao@atlanthia.com>',
+      from: `Atlanthia Piscinas <${EMAIL_USER}>`,
       to: email,
       subject: 'Confirmação do Pedido de Manutenção',
       html: `
