@@ -2,9 +2,16 @@ import express from 'express';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// tente carregar dotenv dinamicamente (evita erro se não estiver instalado no ambiente)
+try {
+  // top-level await não é confiável em todos os ambientes, usar import() com then/catch
+  import('dotenv')
+    .then(dotenv => dotenv.config())
+    .catch(() => console.warn('dotenv não encontrado; continuar sem .env'));
+} catch (e) {
+  console.warn('Falha ao tentar carregar dotenv:', e && e.message);
+}
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -171,6 +178,7 @@ app.post('/api/email', upload.array('fotos'), async (req, res) => {
       </html>
       `
     });
+
     res.json({ ok: true });
   } catch (err) {
     console.error(err);
